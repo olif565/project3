@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load widget_tweaks %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-data__tool">
+            <div class="table-data__tool-left">
+                <a href="{% url 'home:normalisasi' data.level %}">
+                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                        NORMALISASI 
+                    </button>
+                </a>
+                &nbsp;
+                <a href="{% url 'home:kernel' data.level %}">
+                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                        KERNEL 
+                    </button>
+                </a>
+                &nbsp;
+                <a href="{% url 'home:training' data.level %}">
+                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                        SEQUENTIAL TRAINING
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="display: {{ data.display_form }}">
+    <div class="col-lg-12">
+        <!-- INPUT PARAMETER -->
+        <div class="card">
+            <div class="card-header">
+                <strong>INPUT PARAMETER</strong>
+            </div>
+            <div class="card-body card-block">
+                <form action="" method="post" class="form-horizontal" novalidate>
+                    {% csrf_token %}
+                    {% for field in data.form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {% render_field field class="form-control" %}
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-primary btn-sm" id="btn_proses_training">Proses</button>
+                </form>
+            </div>
+        </div>
+        <!-- END INPUT PARAMETER-->
+    </div>
+</div>
+
+<div class="row" id="div_proses_training" style="display: {{ data.display_result }}">
+    <div class="col-lg-12">
+        <!-- DATA TRAINING-->
+        <div class="user-data m-b-30">
+            <h3 class="title-3 m-b-30">
+                <i class="zmdi zmdi-assignment"></i>PERHITUNGAN KERNEL
+            </h3>
+            <div class="table-responsive table-data">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>K(x,y)</td>
+                            {% for data in data.n_data_normalisasi %}
+                                <td>{{ forloop.counter }}</td>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for datax in data.n_list_data_kernel_view %}
+                        <tr class="tr-shadow">
+                        {% for datay in datax %}
+                            <td>{{ datay }}</td>
+                        {% endfor %}
+                        </tr>
+                        <tr class="spacer"></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END DATA TRAINING-->
+    </div>
+</div>
+
+{% endblock %}

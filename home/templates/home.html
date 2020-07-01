@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col">
+      <div class="au-card">
+        <center>
+          <h3 class="pb-2 display-5"><b>SICERDIG</b></h3>
+          <b>SISTEM CERDAS UNTUK DIAGNOSIS FAULT TRANSFORMATOR DAYA</b>
+        </center>
+      </div>
+    </div>
+</div><br/>
+<div class="row">
+  <div class="col">
+    {% if request.session.status == '1' %}
+    <div class="au-card">
+      <b>CARA PENGGUNAAN SISTEM</b>
+      <li>Masukkan data training pada Menu Data Training</li>
+      <li>Masukkan parameter pada Menu Proses Training</li>
+      <li>Masukkan data testing pada Menu Data Testing</li>
+      <li>Lihat hasil klasifikasi dan akurasi pada Menu Diagnosis</li>
+    </div>
+    {% endif %}
+    {% if request.session.status == '0' %}
+    <div class="au-card">
+      <b>CARA PENGGUNAAN SISTEM</b>
+      <li>Masukkan data testing pada Menu Data Testing</li>
+      <li>Hasil Klasifikasi dapat dilihat pada Menu Diagnosis</li>
+    </div>
+    {% endif %}
+    <div class="au-card">
+      <b>KETERANGAN FAULT</b>
+      <li>Kelas 1 &#8594; D1 (Discharge of Low Energy) : Menyebabkan perforasi karbon pada isolasi kertas dalam skala yang lebih besar sehingga muncul banyak partikel karbon pada minyak.</li>
+      <li>Kelas 2 &#8594; D2 (Discharge of High Energy) : Menyebabkan kerusakan dan karbonisasi yang meluas pada kertas minya. Pada kasus yang lebih ekstrim terjadi penggabungan melalui metal (metal fusion), pemutusan (tripping) peralatan dam pengaktifan alarm gas.</li>
+      <li>Kelas 3 &#8594; DT (Combination of Thermal Fault and Discharges) : Munculnya kerusakan dari kombinasi kegagalan antara Thermal Fault dan Discharges</li>
+      <li>Kelas 4 &#8594; T3 (Thermal Fault T>700C) : Munculnya formasi partikel karbon pada minyak secara meluas, pewarnaan pada metal (200C) ataupun penggabungan metal (>1000C)</li>
+      <li>Kelas 5 &#8594; T2 (Thermal Fault 300C &#60; T &#60; 700C) : Munculnya partikel karbon pada minyak</li>
+      <li>Kelas 6 &#8594; T1 (Thermal Fault T &#60;	300C) : Isolasi kertas berubah warna menjadi coklat pada temperatur >200C dan pada temperatur >300C terjadi karbonisasi kertas yaitu munculnya formasi.</li>
+      <li>Kelas 7 &#8594; PD (Partial Discharge) : Pelepasan muatan (discharge) dari plasma dingin (korona) pada gelembung gas (menyebabkan X-wax pada isolasi kertas) ataupun tipe percikan menyebabkan proses perforasi/kebolongan pada kertas yang bisa saja sulit untuk dideteksi.</li>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-data__tool">
+            <div class="table-data__tool-left">
+                {% if request.session.status == '1' %}
+                <a href="{% url 'home:diagnosis' %}">
+                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                        HASIL DIAGNOSIS
+                    </button>
+                </a>
+                &nbsp;
+                <a href="{% url 'home:diagnosis_normalisasi' %}">
+                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                        NORMALISASI
+                    </button>
+                </a>
+                &nbsp;
+                <a href="{% url 'home:diagnosis_kernel' %}">
+                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                        KERNEL
+                    </button>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- DATA DIAGNOSIS-->
+        <div class="user-data m-b-30">
+            <h3 class="title-3 m-b-30"><i class="zmdi zmdi-assignment"></i>DIAGNOSIS</h3>
+            <div class="table-responsive table-data">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            {% if request.session.status == '1' %}
+                            <td>no</td>
+                            <td>𝒇1(𝒙)</td>
+                            <td>Fungsi Klasifikasi 𝒇1(𝒙)</td>
+                            <td>𝒇2(𝒙)</td>
+                            <td>Fungsi Klasifikasi 𝒇2(𝒙)</td>
+                            <td>𝒇3(𝒙)</td>
+                            <td>Fungsi Klasifikasi 𝒇3(𝒙)</td>
+                            <td>𝒇4(𝒙)</td>
+                            <td>Fungsi Klasifikasi 𝒇4(𝒙)</td>
+                            <td>𝒇5(𝒙)</td>
+                            <td>Fungsi Klasifikasi 𝒇5(𝒙)</td>
+                            <td>𝒇6(𝒙)</td>
+                            <td>Fungsi Klasifikasi 𝒇6(𝒙)</td>
+                            <td>𝒇7(𝒙)</td>
+                            <td>Fungsi Klasifikasi 𝒇7(𝒙)</td>
+                            <td>Hasil Klasifikasi</td>
+                            <td>Kelas Aktual</td>
+                            {% endif %}
+
+                            {% if request.session.status == '0' %}
+                            <td>no</td>
+                            <td>Hasil Klasifikasi</td>
+                            <td>Keterangan</td>
+                            {% endif %}
+
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for dt in data_list.data %}
+                    <tr class="tr-shadow">
+                        {% if request.session.status == '1' %}
+                        <td>{{ dt.no }}</td>
+                        <td>{{ dt.f1 }}</td>
+                        <td>{{ dt.fk1 }}</td>
+                        <td>{{ dt.f2 }}</td>
+                        <td>{{ dt.fk2 }}</td>
+                        <td>{{ dt.f3 }}</td>
+                        <td>{{ dt.fk3 }}</td>
+                        <td>{{ dt.f4 }}</td>
+                        <td>{{ dt.fk4 }}</td>
+                        <td>{{ dt.f5 }}</td>
+                        <td>{{ dt.fk5 }}</td>
+                        <td>{{ dt.f6 }}</td>
+                        <td>{{ dt.fk6 }}</td>
+                        <td>{{ dt.f7 }}</td>
+                        <td>{{ dt.fk7 }}</td>
+                        <td>{{ dt.hasil }}</td>
+                        <td>{{ dt.aktual }}</td>
+                        {% endif %}
+                        {% if request.session.status == '0' %}
+                        <td>{{ dt.no }}</td>
+                        <td>{{ dt.hasil }}</td>
+                        <td>{{ dt.keterangan }}</td>
+                        {% endif %}
+                    </tr>
+                    <tr class="spacer"></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END DATA DIAGNOSIS-->
+    </div>
+    {% if request.session.status == '1' %}
+    <div class="col-lg-12">
+        <!-- AKURASI -->
+        <div class="user-data m-b-30">
+            <h3 class="title-3 m-b-30">
+                <i class="zmdi zmdi-assignment"></i>AKURASI
+            </h3>
+            <h3 class="title-3 m-b-30">
+                <b>{{ data_list.akurasi }}</b>
+            </h3>
+        </div>
+         <!-- END AKURASI-->
+    </div>                  
+    {% endif %}
+</div>
+
+{% endblock %}

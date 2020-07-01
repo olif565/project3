@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- DATA TRAINING-->
+        <div class="user-data m-b-30">
+            <h3 class="title-3 m-b-30"><i class="zmdi zmdi-assignment"></i>DATA TESTING</h3>
+            <div class="filters m-b-45">
+                <div class="table-data__tool">
+                    <div class="table-data__tool-left">
+
+                    </div>
+                    <div class="table-data__tool-right">
+                        <a href="{% url 'home:create-testing' %}">
+                            <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                <i class="zmdi zmdi-plus"></i>add item
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive table-data">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>no</td>
+                            <td>% CH4</td>
+                            <td>% C2H4</td>
+                            <td>% C2H4</td>
+                            {% if request.session.status == '1' %}
+                            <td>fault</td>
+                            {% endif %}
+                            <td>hasil diagnosis</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for data in data_list %}
+                    <tr class="tr-shadow">
+                        <td><a href="{% url 'home:detail-testing' data.pk %}"> {{ data.no }}</a></td>
+                        <td>{{ data.persen_ch4 }}</td>
+                        <td>{{ data.persen_c2h4 }}</td>
+                        <td>{{ data.persen_c2h2 }}</td>
+                        {% if request.session.status == '1' %}
+                        <td>{{ data.fault }}</td>
+                         {% endif %}
+                        <td>{{ data.hasil }}</td>
+                        <td>
+                            <div class="table-data-feature">
+                                <a href="{% url 'home:detail-testing' data.pk %}">
+                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Detail">
+                                        <i class="zmdi zmdi-assignment"></i>
+                                    </button>
+                                </a>
+                                <a href="{% url 'home:edit-testing' data.pk %}">
+                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
+                                        <i class="zmdi zmdi-edit"></i>
+                                    </button>
+                                </a>
+                                <a href="{% url 'home:delete-testing' data.pk %}">
+                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Delete">
+                                        <i class="zmdi zmdi-delete"></i>
+                                    </button>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="spacer"></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END DATA TRAINING-->
+    </div>
+</div>
+
+{% endblock %}

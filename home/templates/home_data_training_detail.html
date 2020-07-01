@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="au-card au-card--bg-blue au-card-top-countries m-b-30">
+            <div class="au-card-inner">
+                <div class="table-responsive">
+                    <table class="table table-top-countries">
+                        <tbody>
+                            <tr>
+                                <td>No. Transformator Daya</td>
+                                <td class="text-right">{{ data.no }} </td>
+                            </tr>
+                            <tr>
+                                <td>ppm CH4</td>
+                                <td class="text-right">{{ data.ppm_ch4 }}</td>
+                            </tr>
+                            <tr>
+                                <td>ppm C2H4</td>
+                                <td class="text-right">{{ data.ppm_c2h4 }}</td>
+                            </tr>
+                            <tr>
+                                <td>ppm C2H2</td>
+                                <td class="text-right">{{ data.ppm_c2h2 }}</td>
+                            </tr>
+                            <tr>
+                                <td>%CH4</td>
+                                <td class="text-right">{{ data.persen_ch4 }}</td>
+                            </tr>
+                            <tr>
+                                <td>%C2H4</td>
+                                <td class="text-right">{{ data.persen_c2h4 }}</td>
+                            </tr>
+                            <tr>
+                                <td>%C2H2</td>
+                                <td class="text-right">{{ data.persen_c2h2 }}</td>
+                            </tr>
+                            <tr>
+                                <td>Fault</td>
+                                <td class="text-right">{{ data.fault }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

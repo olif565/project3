@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="au-card au-card--bg-blue au-card-top-countries m-b-30">
+            <div class="au-card-inner">
+                <div class="table-responsive">
+                    <table class="table table-top-countries">
+                        <tbody>
+                            <tr>
+                                <td>Username</td>
+                                <td class="text-right">{{ profile.username }}</td>
+                            </tr>
+                            <tr>
+                                <td>First Name</td>
+                                <td class="text-right">{{ profile.first_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Last Name</td>
+                                <td class="text-right">{{ profile.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td class="text-right">{{ profile.email }}</td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td class="text-right">{{ profile.status }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

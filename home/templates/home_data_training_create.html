@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load widget_tweaks %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Add</strong> Data Training
+            </div>
+            <div class="card-body card-block">
+                <form action="" method="post" class="form-horizontal" novalidate>
+                    {% csrf_token %}
+                    {% for hidden_field in form.hidden_fields %}
+                    {{ hidden_field }}
+                    {% endfor %}
+                    {% for field in form.visible_fields %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {% render_field field class="form-control" %}
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <strong>Import</strong> Data
+            </div>
+            <div class="card-body card-block">
+                <form action="" method="post" class="form-inline" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row form-group">
+                        <div class="col-12 col-md-9">
+                            <input type="file" id="file-excel" name="file-excel" class="form-control-file">
+                        </div>
+                    </div>
+                    <input type="submit" name="input_excel" class="btn btn-primary btn-sm" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
