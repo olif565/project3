@@ -37,3 +37,22 @@ class ParameterForm(forms.Form):
                                widget=TextInput(attrs={'type': 'number'}),
                                error_messages={'required': "Iterasi"})
 
+
+class ParameterFormKfold(forms.Form):
+    lamda = forms.CharField(label='Lambda', required=True, max_length=100,
+                             widget=TextInput(attrs={'type': 'number'}),
+                             error_messages={'required': "Lambda"})
+    complexity = forms.CharField(label='Complexity', required=True, max_length=100,
+                                widget=TextInput(attrs={'type': 'number'}),
+                                error_messages={'required': "Constant"})
+    gamma = forms.CharField(label='Gamma', required=True, max_length=100,
+                             widget=TextInput(attrs={'type': 'number'}),
+                             error_messages={'required': "Gamma"})
+    iterasi = forms.CharField(label='Iterasi', required=True, max_length=100,
+                               widget=TextInput(attrs={'type': 'number'}),
+                               error_messages={'required': "Iterasi"})
+    split = forms.CharField(label='Split', required=True, max_length=100,
+                              widget=TextInput(attrs={'type': 'number'}),
+                              error_messages={'required': "Split"})
+
+

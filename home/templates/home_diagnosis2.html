@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load widget_tweaks %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- INPUT PARAMETER -->
+        <div class="card">
+            <div class="card-header">
+                <strong>INPUT PARAMETER</strong>
+            </div>
+            <div class="card-body card-block">
+                <form action="" method="post" class="form-horizontal" novalidate>
+                    {% csrf_token %}
+                    {% for field in data.form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {% render_field field class="form-control" %}
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-primary btn-sm" id="btn_proses_training">Proses</button>
+                </form>
+            </div>
+        </div>
+        <!-- END INPUT PARAMETER-->
+    </div>
+</div>
+
+<div class="card shadow" id="div_proses_training" style="margin: 0px; display: {{ data.display }}">
+    <div class="card shadow">
+        <div class="card-header border-0">
+            <div class="table-responsive">
+                <h2 style="margin: 12px;"><b>Evaluasi Metode</b></h2>
+                <br/>
+
+                {% for data in data.data_evaluasi %}
+                <h3 style="margin: 12px;"><b>Iterasi {{ forloop.counter }}</b></h3>
+                <br/>
+                <table class="table align-items-center table-flush">
+                    <thead>
+                    <tr>
+                        <th width="10%"><b>Label</b></th>
+                        <th width="30%"><b>Precision</b></th>
+                        <th width="30%"><b>Recall</b></th>
+                        <th width="30%"><b>F1-Score</b></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for dt in data.evaluasi %}
+                    <tr>
+                        <td>{{ dt.label }}</td>
+                        <td>{{ dt.precision }}</td>
+                        <td>{{ dt.recall }}</td>
+                        <td>{{ dt.f1_score }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <br />
+                {% endfor %}
+
+                <br/>
+            </div>
+
+            <div class="table-responsive">
+                <h2 style="margin: 12px;"><b>Hasil Akurasi</b></h2>
+                <br/>
+                <table class="table align-items-center table-flush">
+                    <thead>
+                    <tr>
+                        <th width="10%"><b>Iterasi</b></th>
+                        <th width="90%"><b>Hasil Akurasi</b></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for data in data.scores %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ data }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <br/>
+                <h4 style="margin: 12px;"><b>Rata-rata Akurasi:</b></h4>
+                <h3 style="margin: 12px;"><b>{{ data.scores_mean }}</b></h3>
+            </div>
+        </div>
+
+        <br/>
+        <br/>
+
+    </div>
+</div>
+
+{% endblock %}
