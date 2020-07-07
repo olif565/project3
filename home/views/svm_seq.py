@@ -16,6 +16,8 @@ def calculate_svm_seq(lamda, complexity, gamma, iterasi, split):
     x = data['x']
     y = data['y']
 
+    # svclassifier = SVC(kernel='rbf', C=complexity, max_iter=iterasi, gamma=gamma, probability=True, decision_function_shape='ovr', break_ties=True, class_weight='balanced')
+    # svclassifier = SVC(kernel='rbf', C=complexity, max_iter=iterasi, gamma=gamma, probability=True, decision_function_shape='ovr', break_ties=True)
     svclassifier = SVC(kernel='rbf', C=complexity, max_iter=iterasi, gamma=gamma, probability=True)
 
     scores = []

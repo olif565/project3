@@ -44,14 +44,14 @@ class ParameterFormKfold(forms.Form):
                              error_messages={'required': "Lambda"})
     complexity = forms.CharField(label='Complexity', required=True, max_length=100,
                                 widget=TextInput(attrs={'type': 'number'}),
-                                error_messages={'required': "Constant"})
+                                error_messages={'required': "Complexity"})
     gamma = forms.CharField(label='Gamma', required=True, max_length=100,
                              widget=TextInput(attrs={'type': 'number'}),
                              error_messages={'required': "Gamma"})
     iterasi = forms.CharField(label='Iterasi', required=True, max_length=100,
                                widget=TextInput(attrs={'type': 'number'}),
                                error_messages={'required': "Iterasi"})
-    split = forms.CharField(label='Split', required=True, max_length=100,
+    split = forms.CharField(label='K-fold', required=True, max_length=100,
                               widget=TextInput(attrs={'type': 'number'}),
                               error_messages={'required': "Split"})
 
