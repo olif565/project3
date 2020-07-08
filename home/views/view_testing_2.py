@@ -7,7 +7,7 @@ from home.views import diagnosis, testing, svm_seq
 
 
 class IndexView(ListView):
-    template_name = 'home_diagnosis2.html'
+    template_name = 'home_pengujian_2.html'
     context_object_name = 'data'
 
     def get_queryset(self, **kwargs):

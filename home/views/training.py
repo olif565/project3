@@ -4,10 +4,12 @@ import math
 from home.models import DataBias, HasilTraining
 from home.views import kernel
 
+from sklearn.model_selection import StratifiedKFold
+
 logger = logging.getLogger(__name__)
 
 
-def get_matriks(data_normalisasi, lamda, sigma):
+def get_matriks(data_normalisasi, lamda, sigma, split=None):
 
     s = sigma
 

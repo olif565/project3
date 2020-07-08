@@ -159,12 +159,12 @@
                     </li>
                     {% if request.session.status == '1' %}
                     <li class="has-sub">
-                        <a class="js-arrow" href="#">
+                        <a class="js-arrow" href="{% url 'home:testing_manual' %}">
                             <i class="zmdi zmdi-settings"></i>Pengujian SVM
                         </a>
                     </li>
                     <li class="has-sub">
-                        <a class="js-arrow" href="{% url 'home:diagnosis_svm' %}">
+                        <a class="js-arrow" href="{% url 'home:testing_svm' %}">
                             <i class="zmdi zmdi-settings"></i>Pengujian SVM (Library)
                         </a>
                     </li>

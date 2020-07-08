@@ -4,10 +4,16 @@ from django.db.models import Q
 
 def get_normalisasi(level):
 
-    n_data_normalisasi = proses_normalisasi(level)
+    proses = proses_normalisasi(level)
+
+    n_data_normalisasi = proses['n_data_normalisasi']
+    data_normalisasi_x = proses['data_normalisasi_x']
+    data_normalisasi_y = proses['data_normalisasi_y']
 
     data_normalisasi = {
-        'n_data_normalisasi': n_data_normalisasi
+        'n_data_normalisasi': n_data_normalisasi,
+        'data_normalisasi_x': data_normalisasi_x,
+        'data_normalisasi_y': data_normalisasi_y
     }
 
     return data_normalisasi
@@ -17,7 +23,7 @@ def save_normalisasi_to_db():
     # Save to DB
     for i in range(7):
         level = i + 1
-        save_to_db(proses_normalisasi(level), level)
+        save_to_db(proses_normalisasi(level)['n_data_normalisasi'], level)
 
 
 def proses_normalisasi(level):
@@ -91,6 +97,9 @@ def proses_normalisasi(level):
     n_persen_c2h4 = []
     n_persen_c2h2 = []
 
+    data_normalisasi_x = []
+    data_normalisasi_y = []
+
     # Normalisasi
     for x in listdata:
         data = {
@@ -107,16 +116,19 @@ def proses_normalisasi(level):
         n = (float(x) - minvalue['persen_ch4']) / (maxvalue['persen_ch4'] - minvalue['persen_ch4'])
         n_persen_ch4.append(n)
         n_data_normalisasi[i]['persen_ch4'] = float(n)
+        data_normalisasi_x.append([float(n), 0, 0])
 
     for i, x in enumerate(list_persen_c2h4):
         n = (float(x) - minvalue['persen_c2h4']) / (maxvalue['persen_c2h4'] - minvalue['persen_c2h4'])
         n_persen_c2h4.append(n)
         n_data_normalisasi[i]['persen_c2h4'] = float(n)
+        data_normalisasi_x[i][1] = float(n)
 
     for i, x in enumerate(list_persen_c2h2):
         n = (float(x) - minvalue['persen_c2h2']) / (maxvalue['persen_c2h2'] - minvalue['persen_c2h2'])
         n_persen_c2h2.append(n)
         n_data_normalisasi[i]['persen_c2h2'] = float(n)
+        data_normalisasi_x[i][2] = float(n)
 
     for i, x in enumerate(n_data_normalisasi):
         if x['fault'] == 'D1':
@@ -134,6 +146,8 @@ def proses_normalisasi(level):
         else:
             x['fault'] = '7'
 
+        data_normalisasi_y.append(x['fault'])
+
     for i, x in enumerate(n_data_normalisasi):
         if x['fault'] == str(level):
             x['kelas'] = '1'
@@ -142,7 +156,13 @@ def proses_normalisasi(level):
 
     # End Normalisasi
 
-    return n_data_normalisasi
+    context = {
+        'n_data_normalisasi': n_data_normalisasi,
+        'data_normalisasi_x': data_normalisasi_x,
+        'data_normalisasi_y': data_normalisasi_y
+    }
+
+    return context
 
 
 def save_to_db(n_data_normalisasi, level):

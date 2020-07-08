@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import path
 
 from home.views import view_data_training, view_data_testing, view_normalisasi, view_training, view_diagnosis, \
-    view_kernel, view_data_user, view_diagnosis_svm
+    view_kernel, view_data_user, view_testing_2, view_testing_1
 
 app_name = 'home'
 
@@ -50,7 +50,8 @@ urlpatterns = [
     path('diagnosis_normalisasi', view_diagnosis.NormalisasiView.as_view(), name='diagnosis_normalisasi'),
     path('diagnosis_kernel', view_diagnosis.KernelView.as_view(), name='diagnosis_kernel'),
 
-    path('diagnosis_svm', view_diagnosis_svm.IndexView.as_view(), name='diagnosis_svm'),
+    path('testing_manual', view_testing_1.IndexView.as_view(), name='testing_manual'),
+    path('testing_svm', view_testing_2.IndexView.as_view(), name='testing_svm'),
 
     path('logout', view_data_training.logout_view, name='logout')
 ]
