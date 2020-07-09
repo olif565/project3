@@ -86,7 +86,7 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
             if iskfold:
                 if x[3] == '1':
                     aktual = 'D1'
-                elif x[3] == '1':
+                elif x[3] == '2':
                     aktual = 'D2'
                 elif x[3] == '3':
                     aktual = 'DT'
@@ -169,7 +169,12 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
                     dd.akurasi = 0
                     dd.save()
 
-        ac = sum(data_akurasi) / len(data_akurasi)
+        da = []
+        for a, b in enumerate(data_akurasi):
+            if b == 1:
+                da.append(b)
+
+        ac = sum(da) / len(data_akurasi)
 
         if iskfold:
             no = str(i+1)

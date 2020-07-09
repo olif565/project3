@@ -149,7 +149,7 @@ class IndexView(ListView):
 
             context = {
                 'scores': [],
-                'scores_mean': accuracy[0],
+                'scores_mean': (sum(accuracy) / len(accuracy)),
                 'data_evaluasi': [],
                 'display': 'block',
                 'form': form
