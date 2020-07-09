@@ -116,7 +116,7 @@ def proses_normalisasi(level):
         n = (float(x) - minvalue['persen_ch4']) / (maxvalue['persen_ch4'] - minvalue['persen_ch4'])
         n_persen_ch4.append(n)
         n_data_normalisasi[i]['persen_ch4'] = float(n)
-        data_normalisasi_x.append([float(n), 0, 0])
+        data_normalisasi_x.append([float(n), 0, 0, n_data_normalisasi[i]['fault'], 1, 0])
 
     for i, x in enumerate(list_persen_c2h4):
         n = (float(x) - minvalue['persen_c2h4']) / (maxvalue['persen_c2h4'] - minvalue['persen_c2h4'])
@@ -147,12 +147,15 @@ def proses_normalisasi(level):
             x['fault'] = '7'
 
         data_normalisasi_y.append(x['fault'])
+        data_normalisasi_x[i][3] = x['fault']
 
     for i, x in enumerate(n_data_normalisasi):
         if x['fault'] == str(level):
             x['kelas'] = '1'
         else:
             x['kelas'] = '-1'
+
+        data_normalisasi_x[i][4] = x['kelas']
 
     # End Normalisasi
 

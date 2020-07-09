@@ -9,11 +9,11 @@ from sklearn.model_selection import StratifiedKFold
 logger = logging.getLogger(__name__)
 
 
-def get_matriks(data_normalisasi, lamda, sigma, split=None):
+def get_matriks(data_normalisasi, lamda, sigma, iskfold=False):
 
     s = sigma
 
-    datakernel = kernel.get_kernel(data_normalisasi, s)
+    datakernel = kernel.get_kernel(data_normalisasi, s, iskfold)
     n_data_normalisasi = datakernel['n_data_normalisasi']
     n_list_data_kernel = datakernel['n_list_data_kernel']
     n_list_data_kernel_view = datakernel['n_list_data_kernel_view']
@@ -27,11 +27,19 @@ def get_matriks(data_normalisasi, lamda, sigma, split=None):
     for i, x in enumerate(n_list_data_kernel):
         n_data_matriks = []
         n_data_matriks_view = []
-        y_i = int(n_data_normalisasi[i]['kelas'])
+
+        if iskfold:
+            y_i = int(n_data_normalisasi[i][4])
+        else:
+            y_i = int(n_data_normalisasi[i]['kelas'])
 
         for j, y in enumerate(x):
             y = float(n_list_data_kernel[i][j])
-            y_j = int(n_data_normalisasi[j]['kelas'])
+
+            if iskfold:
+                y_j = int(n_data_normalisasi[j][4])
+            else:
+                y_j = int(n_data_normalisasi[j]['kelas'])
 
             # matrik
             d_ij = y_i * y_j * (y + (math.pow(l, 2)))
@@ -155,13 +163,19 @@ def get_alfa_baru(alpha, data_delta_alfa):
     return data_alfa_baru
 
 
-def get_bias(level, data_normalisasi, data_alpha, data_kernel):
+def get_bias(level, data_normalisasi, data_alpha, data_kernel, iskfold=True):
 
     alpha1 = []
     alpha2 = []
 
     for i, x in enumerate(data_alpha):
-        if data_normalisasi[i]['kelas'] == '1':
+
+        if iskfold:
+            dn = data_normalisasi[i]['kelas']
+        else:
+            dn = data_normalisasi[i][4]
+
+        if dn == '1':
             alpha1.append(x)
         else:
             alpha2.append(x)
@@ -192,7 +206,12 @@ def get_bias(level, data_normalisasi, data_alpha, data_kernel):
 
         for j, y in enumerate(x):
 
-            w = int(data_normalisasi[j]['kelas']) * data_alpha[j] * kernel[i][j]
+            if iskfold:
+                dn = data_normalisasi[j]['kelas']
+            else:
+                dn = data_normalisasi[j][4]
+
+            w = int(dn) * data_alpha[j] * kernel[i][j]
             bobot.append(w)
 
             # print(j, data_alpha[j], kernel[i][j])
@@ -206,26 +225,27 @@ def get_bias(level, data_normalisasi, data_alpha, data_kernel):
 
     bias = -(sum(sum_w)) / 2
 
-    # Save Alpha to DB
-    for y, x in enumerate(data_alpha):
-        db = HasilTraining.objects.filter(no=str(y + 1), level=str(level))
+    if iskfold:
+        # Save Alpha to DB
+        for y, x in enumerate(data_alpha):
+            db = HasilTraining.objects.filter(no=str(y + 1), level=str(level))
+
+            if len(db) > 0:
+                datatraining = db[0]
+                datatraining.alpha = x
+                datatraining.save()
+
+        # Save Bias to DB
+        db = DataBias.objects.filter(level=str(level))
 
         if len(db) > 0:
-            datatraining = db[0]
-            datatraining.alpha = x
-            datatraining.save()
+            databias = db[0]
+        else:
+            databias = DataBias()
+            databias.level = str(level)
 
-    # Save Bias to DB
-    db = DataBias.objects.filter(level=str(level))
-
-    if len(db) > 0:
-        databias = db[0]
-    else:
-        databias = DataBias()
-        databias.level = str(level)
-
-    databias.bias = bias
-    databias.save()
+        databias.bias = bias
+        databias.save()
 
     data = {
         'data_bobot': data_bobot,

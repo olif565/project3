@@ -1,7 +1,7 @@
 import math
 
 
-def get_kernel(data_normalisasi, sigma):
+def get_kernel(data_normalisasi, sigma, iskfold=False):
 
     n_data_normalisasi = data_normalisasi
     n_list_data_kernel_view = []
@@ -14,9 +14,14 @@ def get_kernel(data_normalisasi, sigma):
         n_data_kernel = []
 
         for j, y in enumerate(n_data_normalisasi):
-            n1 = math.pow((x['persen_ch4'] - y['persen_ch4']), 2)
-            n2 = math.pow((x['persen_c2h4'] - y['persen_c2h4']), 2)
-            n3 = math.pow((x['persen_c2h2'] - y['persen_c2h2']), 2)
+            if iskfold:
+                n1 = math.pow((float(x[0]) - float(y[0])), 2)
+                n2 = math.pow((float(x[1]) - float(y[1])), 2)
+                n3 = math.pow((float(x[2]) - float(y[2])), 2)
+            else:
+                n1 = math.pow((x['persen_ch4'] - y['persen_ch4']), 2)
+                n2 = math.pow((x['persen_c2h4'] - y['persen_c2h4']), 2)
+                n3 = math.pow((x['persen_c2h2'] - y['persen_c2h2']), 2)
 
             k = math.exp((-(n1 + n2 + n3)) / (2 * (math.pow(s, 2))))
 
