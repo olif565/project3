@@ -128,8 +128,6 @@ def get_normalisasi():
 
     x = scaler.transform(x)
 
-    print(x)
-
     data = {
         'x': x,
         'y': y

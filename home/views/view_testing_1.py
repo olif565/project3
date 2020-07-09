@@ -1,3 +1,5 @@
+import numpy as np
+
 from django.shortcuts import render
 from django.views.generic import ListView
 from sklearn.model_selection import StratifiedKFold
@@ -73,11 +75,13 @@ class IndexView(ListView):
                 x = dt_normalisasi['data_normalisasi_x']
                 y = dt_normalisasi['data_normalisasi_y']
 
+                x = np.array(x)
+                y = np.array(y)
+
                 cv = StratifiedKFold(n_splits=split, shuffle=True, random_state=42)
 
                 for train_index, test_index in cv.split(x, y):
-                    
-
+                    print(train_index, test_index)
 
             context = {
                 'scores': [],
