@@ -152,8 +152,6 @@ class IndexView(ListView):
                 lv = i + 1
                 data_normalisasi = normalisasi.get_normalisasi(lv)['n_data_normalisasi']
 
-                print(data_normalisasi)
-
                 matriks = training.get_matriks(data_normalisasi, lamda, float(s))
                 n_data_normalisasi = matriks['n_data_normalisasi']
                 n_list_data_kernel = matriks['n_list_data_kernel']

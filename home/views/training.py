@@ -9,7 +9,7 @@ from sklearn.model_selection import StratifiedKFold
 logger = logging.getLogger(__name__)
 
 
-def get_matriks(data_normalisasi, lamda, sigma, split=None):
+def get_matriks(data_normalisasi, lamda, sigma):
 
     s = sigma
 
@@ -155,7 +155,7 @@ def get_alfa_baru(alpha, data_delta_alfa):
     return data_alfa_baru
 
 
-def get_bias(level, data_normalisasi, data_alpha, data_kernel):
+def get_bias(level, data_normalisasi, data_alpha, data_kernel, issave=True):
 
     alpha1 = []
     alpha2 = []
@@ -206,26 +206,27 @@ def get_bias(level, data_normalisasi, data_alpha, data_kernel):
 
     bias = -(sum(sum_w)) / 2
 
-    # Save Alpha to DB
-    for y, x in enumerate(data_alpha):
-        db = HasilTraining.objects.filter(no=str(y + 1), level=str(level))
+    if issave:
+        # Save Alpha to DB
+        for y, x in enumerate(data_alpha):
+            db = HasilTraining.objects.filter(no=str(y + 1), level=str(level))
+
+            if len(db) > 0:
+                datatraining = db[0]
+                datatraining.alpha = x
+                datatraining.save()
+
+        # Save Bias to DB
+        db = DataBias.objects.filter(level=str(level))
 
         if len(db) > 0:
-            datatraining = db[0]
-            datatraining.alpha = x
-            datatraining.save()
+            databias = db[0]
+        else:
+            databias = DataBias()
+            databias.level = str(level)
 
-    # Save Bias to DB
-    db = DataBias.objects.filter(level=str(level))
-
-    if len(db) > 0:
-        databias = db[0]
-    else:
-        databias = DataBias()
-        databias.level = str(level)
-
-    databias.bias = bias
-    databias.save()
+        databias.bias = bias
+        databias.save()
 
     data = {
         'data_bobot': data_bobot,

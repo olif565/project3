@@ -2,9 +2,9 @@ from home.models import Data, HasilTraining
 from django.db.models import Q
 
 
-def get_normalisasi(level):
+def get_normalisasi(level, list_id=None):
 
-    proses = proses_normalisasi(level)
+    proses = proses_normalisasi(level, list_id)
 
     n_data_normalisasi = proses['n_data_normalisasi']
     data_normalisasi_x = proses['data_normalisasi_x']
@@ -26,7 +26,7 @@ def save_normalisasi_to_db():
         save_to_db(proses_normalisasi(level)['n_data_normalisasi'], level)
 
 
-def proses_normalisasi(level):
+def proses_normalisasi(level, list_id=None):
     # D1 kelas 1
     # D2 kelas 2
     # DT kelas 3
@@ -35,61 +35,122 @@ def proses_normalisasi(level):
     # T1 kelas 6
     # PD kelas 7
 
-    datalevel = {
-        1: Data.objects.all(),
-        2: Data.objects.filter(~Q(fault='D1')),
-        3: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2')),
-        4: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
-        5: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
-        6: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
-        7: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
-    }
+    if list_id is None:
+        datalevel = {
+            1: Data.objects.all(),
+            2: Data.objects.filter(~Q(fault='D1')),
+            3: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2')),
+            4: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
+            5: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
+            6: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
+            7: Data.objects.filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
+        }
 
-    datalevel_persen_ch4 = {
-        1: Data.objects.values_list('persen_ch4', flat=True),
-        2: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1')),
-        3: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2')),
-        4: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
-        5: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
-        6: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
-        7: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
-    }
+        datalevel_persen_ch4 = {
+            1: Data.objects.values_list('persen_ch4', flat=True),
+            2: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1')),
+            3: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2')),
+            4: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
+            5: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
+            6: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
+            7: Data.objects.values_list('persen_ch4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
+        }
 
-    datalevel_persen_c2h4 = {
-        1: Data.objects.values_list('persen_c2h4', flat=True),
-        2: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1')),
-        3: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2')),
-        4: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
-        5: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
-        6: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
-        7: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
-    }
+        datalevel_persen_c2h4 = {
+            1: Data.objects.values_list('persen_c2h4', flat=True),
+            2: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1')),
+            3: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2')),
+            4: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
+            5: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
+            6: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
+            7: Data.objects.values_list('persen_c2h4', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
+        }
 
-    datalevel_persen_c2h2 = {
-        1: Data.objects.values_list('persen_c2h2', flat=True),
-        2: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1')),
-        3: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2')),
-        4: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
-        5: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
-        6: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
-        7: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
-    }
+        datalevel_persen_c2h2 = {
+            1: Data.objects.values_list('persen_c2h2', flat=True),
+            2: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1')),
+            3: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2')),
+            4: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
+            5: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
+            6: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
+            7: Data.objects.values_list('persen_c2h2', flat=True).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
+        }
+    else:
+        datalevel = {
+            1: Data.objects.filter(id__in=list_id),
+            2: Data.objects.filter(id__in=list_id).filter(~Q(fault='D1')),
+            3: Data.objects.filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2')),
+            4: Data.objects.filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
+            5: Data.objects.filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
+            6: Data.objects.filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
+            7: Data.objects.filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
+        }
+
+        datalevel_persen_ch4 = {
+            1: Data.objects.values_list('persen_ch4', flat=True).filter(id__in=list_id),
+            2: Data.objects.values_list('persen_ch4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1')),
+            3: Data.objects.values_list('persen_ch4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2')),
+            4: Data.objects.values_list('persen_ch4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
+            5: Data.objects.values_list('persen_ch4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
+            6: Data.objects.values_list('persen_ch4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
+            7: Data.objects.values_list('persen_ch4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
+        }
+
+        datalevel_persen_c2h4 = {
+            1: Data.objects.values_list('persen_c2h4', flat=True).filter(id__in=list_id),
+            2: Data.objects.values_list('persen_c2h4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1')),
+            3: Data.objects.values_list('persen_c2h4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2')),
+            4: Data.objects.values_list('persen_c2h4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
+            5: Data.objects.values_list('persen_c2h4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
+            6: Data.objects.values_list('persen_c2h4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
+            7: Data.objects.values_list('persen_c2h4', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
+        }
+
+        datalevel_persen_c2h2 = {
+            1: Data.objects.values_list('persen_c2h2', flat=True).filter(id__in=list_id),
+            2: Data.objects.values_list('persen_c2h2', flat=True).filter(id__in=list_id).filter(~Q(fault='D1')),
+            3: Data.objects.values_list('persen_c2h2', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2')),
+            4: Data.objects.values_list('persen_c2h2', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT')),
+            5: Data.objects.values_list('persen_c2h2', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3')),
+            6: Data.objects.values_list('persen_c2h2', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2')),
+            7: Data.objects.values_list('persen_c2h2', flat=True).filter(id__in=list_id).filter(~Q(fault='D1') & ~Q(fault='D2') & ~Q(fault='DT') & ~Q(fault='T3') & ~Q(fault='T2') & ~Q(fault='T1'))
+        }
 
     listdata = datalevel.get(level)
     list_persen_ch4 = datalevel_persen_ch4.get(level)
     list_persen_c2h4 = datalevel_persen_c2h4.get(level)
     list_persen_c2h2 = datalevel_persen_c2h2.get(level)
 
-    minvalue = {
-        'persen_ch4': min([float(i) for i in list_persen_ch4]),
-        'persen_c2h4': min([float(i) for i in list_persen_c2h4]),
-        'persen_c2h2': min([float(i) for i in list_persen_c2h2])
-    }
+    if len(list_persen_ch4) > 0:
+        minch4 = min([float(i) for i in list_persen_ch4])
+        maxch4 = max([float(i) for i in list_persen_ch4])
+    else:
+        minch4 = 0
+        maxch4 = 0
 
+    if len(list_persen_c2h4) > 0:
+        minc2h4 = min([float(i) for i in list_persen_c2h4])
+        maxc2h4 = max([float(i) for i in list_persen_c2h4])
+    else:
+        minc2h4 = 0
+        maxc2h4 = 0
+
+    if len(list_persen_c2h2) > 0:
+        minc2h2 = min([float(i) for i in list_persen_c2h2])
+        maxc2h2 = max([float(i) for i in list_persen_c2h2])
+    else:
+        minc2h2 = 0
+        maxc2h2 = 0
+
+    minvalue = {
+        'persen_ch4': minch4,
+        'persen_c2h4': minc2h4,
+        'persen_c2h2': minc2h2
+    }
     maxvalue = {
-        'persen_ch4': max([float(i) for i in list_persen_ch4]),
-        'persen_c2h4': max([float(i) for i in list_persen_c2h4]),
-        'persen_c2h2': max([float(i) for i in list_persen_c2h2])
+        'persen_ch4': maxch4,
+        'persen_c2h4': maxc2h4,
+        'persen_c2h2': maxc2h2
     }
 
     n_data_normalisasi = []
@@ -113,19 +174,31 @@ def proses_normalisasi(level):
         n_data_normalisasi.append(data)
 
     for i, x in enumerate(list_persen_ch4):
-        n = (float(x) - minvalue['persen_ch4']) / (maxvalue['persen_ch4'] - minvalue['persen_ch4'])
+        minmax = maxvalue['persen_ch4'] - minvalue['persen_ch4']
+        if minmax > 0:
+            n = (float(x) - minvalue['persen_ch4']) / minmax
+        else:
+            n = 0
         n_persen_ch4.append(n)
         n_data_normalisasi[i]['persen_ch4'] = float(n)
-        data_normalisasi_x.append([float(n), 0, 0])
+        data_normalisasi_x.append([float(n), 0, 0, n_data_normalisasi[i]['fault'], 1, 0])
 
     for i, x in enumerate(list_persen_c2h4):
-        n = (float(x) - minvalue['persen_c2h4']) / (maxvalue['persen_c2h4'] - minvalue['persen_c2h4'])
+        minmax = maxvalue['persen_c2h4'] - minvalue['persen_c2h4']
+        if minmax > 0:
+            n = (float(x) - minvalue['persen_c2h4']) / minmax
+        else:
+            n = 0
         n_persen_c2h4.append(n)
         n_data_normalisasi[i]['persen_c2h4'] = float(n)
         data_normalisasi_x[i][1] = float(n)
 
     for i, x in enumerate(list_persen_c2h2):
-        n = (float(x) - minvalue['persen_c2h2']) / (maxvalue['persen_c2h2'] - minvalue['persen_c2h2'])
+        minmax = maxvalue['persen_c2h2'] - minvalue['persen_c2h2']
+        if minmax > 0:
+            n = (float(x) - minvalue['persen_c2h2']) / (maxvalue['persen_c2h2'] - minvalue['persen_c2h2'])
+        else:
+            n = 0
         n_persen_c2h2.append(n)
         n_data_normalisasi[i]['persen_c2h2'] = float(n)
         data_normalisasi_x[i][2] = float(n)
@@ -147,12 +220,15 @@ def proses_normalisasi(level):
             x['fault'] = '7'
 
         data_normalisasi_y.append(x['fault'])
+        data_normalisasi_x[i][3] = x['fault']
 
     for i, x in enumerate(n_data_normalisasi):
         if x['fault'] == str(level):
             x['kelas'] = '1'
         else:
             x['kelas'] = '-1'
+
+        data_normalisasi_x[i][4] = x['kelas']
 
     # End Normalisasi
 

@@ -4,9 +4,13 @@ import numpy as np
 from home.models import DataTesting, HasilTraining, Parameter, DataBias, Diagnosis
 
 
-def proses_testing():
+def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=None):
 
-    data_testing = get_data_testing()
+    if datatest is None:
+        data_testing = get_data_testing()
+    else:
+        data_testing = datatest
+
     sigma = get_sigma()
 
     # print(data_testing)
@@ -24,34 +28,49 @@ def proses_testing():
     list_data_kernel = []
 
     for i, x in enumerate(data_testing):
+        # print(x)
 
         hasil = ''
 
         data_kernel = []
+        data_akurasi = []
 
         for lvl in range(7):
 
             level = lvl + 1
 
-            data_training = get_data_training(level)
+            if datatraining is None:
+                data_training = get_data_training(level)
+            else:
+                data_training = datatraining
 
-            db = DataBias.objects.filter(level=str(level))
-
-            bias = 0
-            if len(db) > 0:
-                bias = float(db[0].bias)
+            if databias is None:
+                db = DataBias.objects.filter(level=str(level))
+                bias = 0
+                if len(db) > 0:
+                    bias = float(db[0].bias)
+            else:
+                bias = float(databias[lvl])
 
             data_k = []
             data_alpha = []
 
             for j, y in enumerate(data_training):
-                n1 = math.pow((float(y['n_ch4']) - float(x['persen_ch4'])), 2)
-                n2 = math.pow((float(y['n_c2h4']) - float(x['persen_c2h4'])), 2)
-                n3 = math.pow((float(y['n_c2h2']) - float(x['persen_c2h2'])), 2)
+                if iskfold:
+                    n1 = math.pow((float(y[0]) - float(x[0])), 2)
+                    n2 = math.pow((float(y[1]) - float(x[1])), 2)
+                    n3 = math.pow((float(y[2]) - float(x[2])), 2)
+                else:
+                    n1 = math.pow((float(y['n_ch4']) - float(x['persen_ch4'])), 2)
+                    n2 = math.pow((float(y['n_c2h4']) - float(x['persen_c2h4'])), 2)
+                    n3 = math.pow((float(y['n_c2h2']) - float(x['persen_c2h2'])), 2)
 
                 k = math.exp((-(n1 + n2 + n3)) / (2 * (math.pow(float(sigma), 2))))
 
-                a = float(y['alpha']) * float(y['kelas']) * k
+                if iskfold:
+                    a = float(y[5]) * float(y[4]) * k
+                else:
+                    a = float(y['alpha']) * float(y['kelas']) * k
 
                 data_k.append([k, a])
 
@@ -65,77 +84,124 @@ def proses_testing():
 
             fk = np.sign(f)
 
-            # Save klasifikasi to DB
-            data_db = Diagnosis.objects.filter(no=str(x['no']))
-            if len(data_db) > 0:
-                dd = data_db[0]
+            if iskfold:
+                if x[3] == '1':
+                    aktual = 'D1'
+                elif x[3] == '2':
+                    aktual = 'D2'
+                elif x[3] == '3':
+                    aktual = 'DT'
+                elif x[3] == '4':
+                    aktual = 'T3'
+                elif x[3] == '5':
+                    aktual = 'T2'
+                elif x[3] == '6':
+                    aktual = 'T1'
+                else:
+                    aktual = 'PD'
+
+                if fk == 1:
+                    hasil = datalevel.get(level)
+                    # print(lvl, aktual, hasil)
+
+                    akurasi = 0
+                    if hasil == aktual:
+                        akurasi = 1
+                else:
+                    akurasi = 0
+
+                # print(akurasi)
+                data_akurasi.append(akurasi)
             else:
-                dd = Diagnosis()
-                dd.no = str(x['no'])
+                # Save klasifikasi to DB
+                data_db = Diagnosis.objects.filter(no=str(x['no']))
+                if len(data_db) > 0:
+                    dd = data_db[0]
+                else:
+                    dd = Diagnosis()
+                    dd.no = str(x['no'])
 
-            if level == 1:
-                dd.f1 = f
-            if level == 2:
-                dd.f2 = f
-            if level == 3:
-                dd.f3 = f
-            if level == 4:
-                dd.f4 = f
-            if level == 5:
-                dd.f5 = f
-            if level == 6:
-                dd.f6 = f
-            if level == 7:
-                dd.f7 = f
+                if level == 1:
+                    dd.f1 = f
+                if level == 2:
+                    dd.f2 = f
+                if level == 3:
+                    dd.f3 = f
+                if level == 4:
+                    dd.f4 = f
+                if level == 5:
+                    dd.f5 = f
+                if level == 6:
+                    dd.f6 = f
+                if level == 7:
+                    dd.f7 = f
 
-            aktual = ''
-            data_db = DataTesting.objects.filter(no=str(x['no']))
-            if len(data_db) > 0:
-                aktual = data_db[0].fault
+                aktual = ''
+                data_db = DataTesting.objects.filter(no=str(x['no']))
+                if len(data_db) > 0:
+                    aktual = data_db[0].fault
 
-            # print(str(x['no']) + " ~ " + str(level) + " ~ " + str(sum_data_alpha) + " ~ " + str(f))
+                # print(str(x['no']) + " ~ " + str(level) + " ~ " + str(sum_data_alpha) + " ~ " + str(f))
 
-            if fk == 1:
-                hasil = datalevel.get(level)
-                h = '1 di level ' + str(level) + ' = ' + hasil
+                if fk == 1:
+                    hasil = datalevel.get(level)
+                    h = '1 di level ' + str(level) + ' = ' + hasil
 
-                akurasi = 0
-                if hasil == aktual:
-                    akurasi = 1
+                    akurasi = 0
+                    if hasil == aktual:
+                        akurasi = 1
 
-                dd.hasil_code = hasil
-                dd.hasil = h
-                dd.aktual = aktual
-                dd.akurasi = akurasi
-                dd.save()
-                break
+                    dd.hasil_code = hasil
+                    dd.hasil = h
+                    dd.aktual = aktual
+                    dd.akurasi = akurasi
+                    dd.save()
+                    break
 
-            # elif level == 6 and fk == -1:
-            #     hasil = datalevel.get(7)
-            #     h = '-1 di level ' + str(level) + ' = ' + hasil
-            #
-            #     dd.hasil = h
-            #     dd.aktual = aktual
-            #     dd.akurasi = 0
-            #     dd.save()
+                # elif level == 6 and fk == -1:
+                #     hasil = datalevel.get(7)
+                #     h = '-1 di level ' + str(level) + ' = ' + hasil
+                #
+                #     dd.hasil = h
+                #     dd.aktual = aktual
+                #     dd.akurasi = 0
+                #     dd.save()
 
-            else:
-                dd.aktual = aktual
-                dd.akurasi = 0
-                dd.save()
+                else:
+                    dd.aktual = aktual
+                    dd.akurasi = 0
+                    dd.save()
+
+        # print(data_akurasi)
+        if iskfold:
+            da = []
+            for a, b in enumerate(data_akurasi):
+                if b == 1:
+                    da.append(b)
+
+            ac = sum(da) / len(data_akurasi)
+        else:
+            ac = 0
+
+        if iskfold:
+            no = str(i+1)
+        else:
+            no = x['no']
 
         list_data_kernel.append(
             {
-                'no': x['no'],
-                'data_kernel': data_kernel
+                'no': no,
+                'data_kernel': data_kernel,
+                'data_akurasi': ac
             }
         )
 
-        db = DataTesting.objects.filter(no=str(x['no']))
-        if len(db) > 0:
-            dt = db[0]
-            dt.hasil = hasil
-            dt.save()
+        if not iskfold:
+            db = DataTesting.objects.filter(no=str(x['no']))
+            if len(db) > 0:
+                dt = db[0]
+                dt.hasil = hasil
+                dt.save()
 
     return list_data_kernel
 

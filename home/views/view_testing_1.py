@@ -68,26 +68,72 @@ class IndexView(ListView):
             param.iterasi = iterasi
             param.save()
 
-            for i in range(7):
-                lv = i + 1
+            dt_normalisasi = normalisasi.get_normalisasi(1)
+            x = dt_normalisasi['data_normalisasi_x']
+            y = dt_normalisasi['data_normalisasi_y']
 
-                dt_normalisasi = normalisasi.get_normalisasi(lv)
-                x = dt_normalisasi['data_normalisasi_x']
-                y = dt_normalisasi['data_normalisasi_y']
+            xk = np.array(x)
+            yk = np.array(y)
 
-                x = np.array(x)
-                y = np.array(y)
+            cv = StratifiedKFold(n_splits=split, shuffle=True, random_state=42)
 
-                cv = StratifiedKFold(n_splits=split, shuffle=True, random_state=42)
+            list_accuracy = []
 
-                for train_index, test_index in cv.split(x, y):
-                    print(train_index, test_index)
+            for train_index, test_index in cv.split(xk, yk):
+                xt = train_index.tolist()
+                xtest = test_index.tolist()
+                # print(xtest)
+
+                for a, b in enumerate(xt):
+                    xt[a] = xt[a] + 1
+
+                for a, b in enumerate(xtest):
+                    xtest[a] = xtest[a] + 1
+
+                data_bias = []
+                n_data_normalisasi = None
+                data_normalisasi_test = None
+
+                for i in range(7):
+                    lv = i + 1
+
+                    data_normalisasi = normalisasi.get_normalisasi(lv, xt)['n_data_normalisasi']
+
+                    matriks = training.get_matriks(data_normalisasi, lamda, float(s))
+                    n_data_normalisasi = matriks['n_data_normalisasi']
+                    n_list_data_kernel = matriks['n_list_data_kernel']
+                    n_list_data_matriks = matriks['n_list_data_matriks']
+
+                    data_iterasi = training.get_iterasi(n_list_data_matriks, complexity, gamma, iterasi)
+                    data_alpha = data_iterasi[len(data_iterasi) - 1]['data_alfa_baru']
+
+                    for j, x in enumerate(n_data_normalisasi):
+                        x[5] = data_alpha[j]
+
+                    bias = 0
+                    if len(data_iterasi) > 0:
+                        dt = training.get_bias(lv, n_data_normalisasi, data_alpha, n_list_data_kernel, False)
+                        bias = dt['bias']
+
+                    data_bias.append(bias)
+
+                    # data_normalisasi_test = normalisasi.get_normalisasi(lv, xtest)['n_data_normalisasi']
+
+                data_testing = testing.proses_testing(True, xk[test_index].tolist(), xk[train_index].tolist(), data_bias)
+
+                acc = []
+                for i, j in enumerate(data_testing):
+                    acc.append(j['data_akurasi'])
+
+                list_accuracy.append(sum(acc) / len(data_testing))
+
+                print(sum(acc) / len(data_testing))
 
             context = {
                 'scores': [],
-                'scores_mean': 0,
+                'scores_mean': sum(list_accuracy) / len(list_accuracy),
                 'data_evaluasi': [],
-                'display': 'none',
+                'display': 'block',
                 'form': form
             }
 
