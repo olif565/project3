@@ -84,6 +84,8 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
 
             fk = np.sign(f)
 
+            print(i, fk)
+
             if iskfold:
                 if x[3] == '1':
                     aktual = 'D1'
@@ -100,18 +102,20 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
                 else:
                     aktual = 'PD'
 
+                akurasi = 0
                 if fk == 1:
                     hasil = datalevel.get(level)
                     # print(lvl, aktual, hasil)
 
-                    akurasi = 0
                     if hasil == aktual:
                         akurasi = 1
-                else:
-                    akurasi = 0
+
+                    data_akurasi.append(akurasi)
+                    # print(i, lvl, fk, akurasi, aktual, hasil)
+                    break
 
                 # print(akurasi)
-                data_akurasi.append(akurasi)
+                # print(fk, aktual, hasil)
             else:
                 # Save klasifikasi to DB
                 data_db = Diagnosis.objects.filter(no=str(x['no']))
@@ -143,11 +147,12 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
 
                 # print(str(x['no']) + " ~ " + str(level) + " ~ " + str(sum_data_alpha) + " ~ " + str(f))
 
+                akurasi = 0
+
                 if fk == 1:
                     hasil = datalevel.get(level)
                     h = '1 di level ' + str(level) + ' = ' + hasil
 
-                    akurasi = 0
                     if hasil == aktual:
                         akurasi = 1
 
@@ -171,6 +176,8 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
                     dd.aktual = aktual
                     dd.akurasi = 0
                     dd.save()
+
+                print(fk, hasil, akurasi)
 
         # print(data_akurasi)
         if iskfold:

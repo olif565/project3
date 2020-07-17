@@ -82,7 +82,7 @@ class IndexView(ListView):
             for train_index, test_index in cv.split(xk, yk):
                 xt = train_index.tolist()
                 xtest = test_index.tolist()
-                # print(xtest)
+                print(xtest)
 
                 for a, b in enumerate(xt):
                     xt[a] = xt[a] + 1
@@ -91,8 +91,6 @@ class IndexView(ListView):
                     xtest[a] = xtest[a] + 1
 
                 data_bias = []
-                n_data_normalisasi = None
-                data_normalisasi_test = None
 
                 for i in range(7):
                     lv = i + 1
@@ -119,6 +117,7 @@ class IndexView(ListView):
 
                     # data_normalisasi_test = normalisasi.get_normalisasi(lv, xtest)['n_data_normalisasi']
 
+                # print( xk[test_index].tolist())
                 data_testing = testing.proses_testing(True, xk[test_index].tolist(), xk[train_index].tolist(), data_bias)
 
                 acc = []
