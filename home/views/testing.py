@@ -28,7 +28,7 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
     list_data_kernel = []
 
     for i, x in enumerate(data_testing):
-        # print(x)
+        print(x)
 
         hasil = ''
 
@@ -84,7 +84,7 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
 
             fk = np.sign(f)
 
-            print(i, fk)
+            # print(i, fk, f, bias)
 
             if iskfold:
                 if x[3] == '1':
@@ -146,6 +146,7 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
                     aktual = data_db[0].fault
 
                 # print(str(x['no']) + " ~ " + str(level) + " ~ " + str(sum_data_alpha) + " ~ " + str(f))
+                print(str(x['no']) + " ~ " + str(level) + " ~ " + str(sum_data_alpha) + " ~ " + str(f))
 
                 akurasi = 0
 
@@ -161,6 +162,9 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
                     dd.aktual = aktual
                     dd.akurasi = akurasi
                     dd.save()
+
+                    # print(h)
+
                     break
 
                 # elif level == 6 and fk == -1:
@@ -177,7 +181,7 @@ def proses_testing(iskfold=False, datatest=None, datatraining=None, databias=Non
                     dd.akurasi = 0
                     dd.save()
 
-                print(fk, hasil, akurasi)
+                # print(fk, hasil, akurasi)
 
         # print(data_akurasi)
         if iskfold:
