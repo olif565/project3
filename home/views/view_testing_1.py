@@ -21,6 +21,7 @@ class IndexView(ListView):
                 form = ParameterFormKfold()
             else:
                 form = ParameterFormKfold(initial={
+                    'sigma': data.sigma,
                     'lamda': data.lamda,
                     'complexity': data.complexity,
                     'gamma': data.gamma,
@@ -45,6 +46,7 @@ class IndexView(ListView):
         form = ParameterFormKfold(request.POST)
 
         if form.is_valid():
+            sigma = float(form.cleaned_data['sigma'])
             lamda = float(form.cleaned_data['lamda'])
             complexity = float(form.cleaned_data['complexity'])
             gamma = float(form.cleaned_data['gamma'])
@@ -61,7 +63,7 @@ class IndexView(ListView):
                 param.id = '1'
                 s = '2'
 
-            param.sigma = s
+            param.sigma = sigma
             param.lamda = lamda
             param.complexity = complexity
             param.gamma = gamma

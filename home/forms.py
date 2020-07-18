@@ -39,6 +39,9 @@ class ParameterForm(forms.Form):
 
 
 class ParameterFormKfold(forms.Form):
+    sigma = forms.CharField(label='Sigma', required=True, max_length=100,
+                            widget=TextInput(attrs={'type': 'number'}),
+                            error_messages={'required': "Sigma"})
     lamda = forms.CharField(label='Lambda', required=True, max_length=100,
                              widget=TextInput(attrs={'type': 'number'}),
                              error_messages={'required': "Lambda"})
