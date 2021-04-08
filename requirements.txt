@@ -1,7 +1,7 @@
 asgiref==3.2.3
 chefboost==0.0.6
 dj-database-url==0.5.0
-Django==3.0.4
+Django==3.0.14
 django-widget-tweaks==1.4.5
 djangorestframework==3.11.0
 et-xmlfile==1.0.1
