@@ -10,7 +10,7 @@ joblib==0.15.1
 libsvm==3.23.0.4
 lml==0.0.9
 mysqlclient==1.4.6
-numpy==1.18.5
+numpy==1.22.0
 openpyxl==3.0.3
 pandas==1.0.5
 pyexcel-io==0.5.20
