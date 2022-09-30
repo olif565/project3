@@ -6,7 +6,7 @@ django-widget-tweaks==1.4.5
 djangorestframework==3.11.0
 et-xmlfile==1.0.1
 jdcal==1.4.1
-joblib==0.15.1
+joblib==1.2.0
 libsvm==3.23.0.4
 lml==0.0.9
 mysqlclient==1.4.6
